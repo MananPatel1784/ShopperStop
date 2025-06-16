@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserServices {
@@ -46,6 +47,22 @@ public class UserServices {
             return true;
         }
         return false;
+    }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
+    public void addNewAdmin(User user){
+        try {
+            user.setCreatedAt(new Date());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setUserRole(UserRole.ADMIN);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while saving the user");
+        }
+
     }
 
 }

@@ -1,5 +1,6 @@
 package com.shopperstop.user_services.controllers;
 
+import com.shopperstop.user_services.entity.Addresses;
 import com.shopperstop.user_services.entity.User;
 import com.shopperstop.user_services.service.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,5 @@ public class UserActionController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
 
 }

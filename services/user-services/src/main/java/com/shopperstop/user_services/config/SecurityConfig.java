@@ -8,10 +8,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 public class SecurityConfig {
@@ -23,14 +25,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                        .requestMatchers("/user/**").authenticated()// Allow health checks
-                        .anyRequest().authenticated()                 // Protect everything else
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").authenticated()
+                        .requestMatchers("/address/**").authenticated()
+                        .anyRequest().permitAll()
                 )
-                .csrf(csrf -> csrf.disable())
-                .httpBasic(withDefaults()); // This replaces the deprecated .httpBasic()
+                .csrf(csrf -> csrf.disable()) // disable CSRF
+                .sessionManagement(session ->session.sessionCreationPolicy(STATELESS))
+                .httpBasic(withDefaults()); // enable Basic Auth
+
 
         return http.build();
     }
