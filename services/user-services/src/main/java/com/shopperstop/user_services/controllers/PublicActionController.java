@@ -1,6 +1,7 @@
 package com.shopperstop.user_services.controllers;
 
 import com.shopperstop.user_services.entity.User;
+import com.shopperstop.user_services.service.UserEventProducer;
 import com.shopperstop.user_services.service.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,14 @@ public class PublicActionController {
     @Autowired
     private UserServices userServices;
 
+    @Autowired
+    private UserEventProducer userEventProducer;
+
     @PostMapping("/create-user")
     public ResponseEntity<?> createNewUser(@RequestBody User user){
         try {
-            userServices.addNewUser(user);
+            User savedUser = userServices.addNewUser(user);
+            userEventProducer.sendUserCreatedEvent(savedUser);
             return new ResponseEntity<User>(user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

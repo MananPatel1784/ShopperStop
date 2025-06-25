@@ -3,6 +3,7 @@ package com.shopperstop.user_services.service;
 import com.shopperstop.user_services.entity.AddressDTO;
 import com.shopperstop.user_services.entity.Addresses;
 import com.shopperstop.user_services.entity.User;
+import com.shopperstop.user_services.entity.UserDTO;
 import com.shopperstop.user_services.repository.AddressRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,9 @@ public class AddressService {
         User user = userServices.getUserByUsername(username);
         Addresses newAddress = new Addresses(addressDTO, user.getUser_id());
         Addresses saved = addressRepository.save(newAddress);
-        user.getAddresses().add(saved);
-        userServices.saveExistingUser(user);
+        UserDTO userDTO = new UserDTO();
+        userDTO.getAddresses().add(saved);
+        userServices.saveExistingUser(userDTO, username);
         return saved;
     }
 
@@ -43,7 +45,7 @@ public class AddressService {
 
         if (matching == null) return false;
         user.getAddresses().remove(matching);
-        userServices.saveExistingUser(user);
+        userServices.saveExistingUser1(user);
         addressRepository.delete(matching);
         return true;
     }
