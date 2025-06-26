@@ -58,4 +58,22 @@ public class ProductController {
             return new ResponseEntity<Exception>(e, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/delete-product/{username}/{PID}")
+    public ResponseEntity<?> deleteProduct(@PathVariable String username, @PathVariable ObjectId PID){
+        try {
+            UserDTO user = userClient.getUserByUsername(username, "Admin");
+            if (user == null || !user.getRole().equalsIgnoreCase("ADMIN")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("Only admins are allowed to update products.");
+            }
+            if(productService.deleteProduct(PID)){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<Exception>(e, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

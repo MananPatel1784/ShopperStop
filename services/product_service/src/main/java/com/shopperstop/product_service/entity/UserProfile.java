@@ -5,18 +5,12 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-import java.util.Objects;
-
-@Document("reviews")
+@Document("user_profiles")
 @Data
-public class Review {
+public class UserProfile {
+
     @Id
-    private ObjectId id;
-    private ObjectId productId;
     private ObjectId userId;
     private String username;
-    private String comment;
-    private int rating; // 1-5
-    private Date createdAt;
+    private String emailID;
 }

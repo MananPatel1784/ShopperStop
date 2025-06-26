@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -52,7 +53,16 @@ public class ProductService {
                         })
                         .orElseThrow(() -> new RuntimeException("Product with ID " + productId + " not found"));
 
+    }
 
-
+    public boolean deleteProduct(ObjectId PID){
+        Optional<Product> product = productRepository.findById(PID);
+        if(product.isPresent()){
+            productRepository.deleteById(PID);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
