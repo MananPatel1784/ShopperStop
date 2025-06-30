@@ -24,7 +24,7 @@ public class PublicActionController {
             userEventProducer.sendUserCreatedEvent(savedUser);
             return new ResponseEntity<User>(user, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Exception>(e, HttpStatus.BAD_REQUEST);
         }
     }
 
